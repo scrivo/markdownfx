@@ -91,7 +91,6 @@ public class MarkdownEditorPane
 		textArea.getStylesheets().add("org/markdownwriterfx/editor/MarkdownEditor.css");
 
 		textArea.textProperty().addListener((observable, oldText, newText) -> {
-			System.out.println(newText);
 			textChanged(newText);
 		});
 
