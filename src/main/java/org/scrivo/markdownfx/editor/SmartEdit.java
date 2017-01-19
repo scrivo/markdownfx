@@ -33,13 +33,19 @@ import static org.fxmisc.wellbehaved.event.EventPattern.keyPressed;
 import static org.fxmisc.wellbehaved.event.InputMap.consume;
 import static org.fxmisc.wellbehaved.event.InputMap.sequence;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javafx.scene.control.Dialog;
 import javafx.scene.control.IndexRange;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Window;
+
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.fxmisc.richtext.model.TwoDimensional.Bias;
 import org.fxmisc.wellbehaved.event.Nodes;
@@ -66,6 +72,8 @@ public class SmartEdit
 	private final MarkdownEditorPane editor;
 	private final StyleClassedTextArea textArea;
 
+	private String imageDialogClassName;
+	
 	SmartEdit(MarkdownEditorPane editor, StyleClassedTextArea textArea) {
 		this.editor = editor;
 		this.textArea = textArea;
@@ -323,7 +331,18 @@ public class SmartEdit
 	}
 
 	public void insertImage() {
-		ImageDialog dialog = new ImageDialog(editor.getNode().getScene().getWindow(), editor.getParentPath());
+		Dialog<String> dialog = new ImageDialog(editor.getNode().getScene().getWindow(), editor.getParentPath());
+		if (null != imageDialogClassName) {
+			Constructor<?> ctor;
+			try {
+				Class<?> cls = Class.forName(imageDialogClassName);
+				ctor = cls.getConstructor(Window.class);
+				dialog = (Dialog<String>)ctor.newInstance(new Object[] { editor.getNode().getScene().getWindow() });
+			} catch (NoSuchMethodException | SecurityException | InstantiationException | 
+					IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}	
 		dialog.showAndWait().ifPresent(result -> {
 			textArea.replaceSelection(result);
 		});
@@ -413,5 +432,9 @@ public class SmartEdit
 			end++; // line separator
 
 		return new IndexRange(start, end);
+	}
+
+	public void setImageDialogClassName(String imageDialogClass) {
+		this.imageDialogClassName = imageDialogClass;
 	}
 }

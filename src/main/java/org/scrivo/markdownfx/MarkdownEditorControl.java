@@ -37,6 +37,7 @@ import javafx.beans.value.ObservableBooleanValue;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -224,5 +225,8 @@ public class MarkdownEditorControl extends BorderPane
 		theFileEditor.setMarkdown(md);
 	}
 
+	public void setImageDialogClassName(String className) {
+		theFileEditor.setImageDialogClassName(className);
+	}
 
 }

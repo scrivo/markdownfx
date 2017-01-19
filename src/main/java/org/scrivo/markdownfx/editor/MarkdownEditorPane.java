@@ -217,6 +217,7 @@ public class MarkdownEditorPane
 			textArea.setEstimatedScrollY(oldScrollY);
 		});
 	}
+	
 	public ObservableValue<String> markdownProperty() { return textArea.textProperty(); }
 
 	// 'markdownText' property

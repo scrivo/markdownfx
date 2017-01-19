@@ -38,6 +38,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
@@ -112,6 +113,9 @@ class MarkdownEditor
 	final PrefsBooleanProperty markdownAstVisible = new PrefsBooleanProperty();
 	
 	private boolean updatePreviewTypePending;
+	
+	private String imageDialogClassName;
+	
 	private void updatePreviewType() {
 		if (markdownPreviewPane == null)
 			return;
@@ -164,7 +168,12 @@ class MarkdownEditor
 			this.tmpMarkDown = null;
 		}
 
-		// clear undo history after first load
+		if (null != this.imageDialogClassName) {
+			markdownEditorPane.getSmartEdit().setImageDialogClassName(imageDialogClassName);
+			this.imageDialogClassName = null;
+		}
+
+			// clear undo history after first load
 		markdownEditorPane.getUndoManager().forgetHistory();
 
 		// bind preview to editor
@@ -217,6 +226,14 @@ class MarkdownEditor
 			this.tmpMarkDown = md;
 		}
 
+	}
+
+	public void setImageDialogClassName(String dlgClazz) {
+		if (null != markdownEditorPane) {
+			markdownEditorPane.getSmartEdit().setImageDialogClassName(dlgClazz);
+		} else {
+			this.imageDialogClassName = dlgClazz;
+		}
 	}
 
 }
